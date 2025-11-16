@@ -1,0 +1,201 @@
+/* Prevent the page from showing a right-side scrollbar and disable scrolling */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden; /* lock page scrolling */
+}
+
+.sidebar {
+  width: 300px;
+  padding: 20px;
+  background: linear-gradient(135deg, #1a3a5f 0%, #0d1929 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  position: sticky;
+  top: 0;
+  height: 100vh;           /* Full viewport height */
+  overflow: hidden;        /* PREVENT sidebar from scrolling */
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+  background-image: url('/public/sidebar.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* ensure background doesn't cause scroll */
+}
+
+.sidebar-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.sidebar-title::before {
+  content: "";
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  background-color: #f0f4ff;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1.81.45 1.61 1.67 1.61 1.16 0 1.6-.64 1.6-1.46 0-.84-.68-1.22-1.88-1.54-1.76-.46-3.48-1.12-3.48-3.31 0-1.67 1.24-2.85 2.92-3.21V4h2.67v2.06c1.42.43 2.48 1.57 2.6 3.08h-1.96c-.1-.7-.44-1.35-1.39-1.35-1.03 0-1.45.55-1.45 1.28 0 .64.51 1.03 1.78 1.37 1.82.49 3.58 1.15 3.58 3.49 0 1.83-1.35 2.96-3.18 3.16z'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1.81.45 1.61 1.67 1.61 1.16 0 1.6-.64 1.6-1.46 0-.84-.68-1.22-1.88-1.54-1.76-.46-3.48-1.12-3.48-3.31 0-1.67 1.24-2.85 2.92-3.21V4h2.67v2.06c1.42.43 2.48 1.57 2.6 3.08h-1.96c-.1-.7-.44-1.35-1.39-1.35-1.03 0-1.45.55-1.45 1.28 0 .64.51 1.03 1.78 1.37 1.82.49 3.58 1.15 3.58 3.49 0 1.83-1.35 2.96-3.18 3.16z'/%3E%3C/svg%3E");
+  mask-size: contain;
+  -webkit-mask-size: contain;
+}
+
+.tab-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tab-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tab-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.tab-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease;
+}
+
+.tab-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.tab-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease;
+}
+
+.tab-label {
+  flex: 1;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Hover State */
+.tab-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.tab-item:hover .tab-icon {
+  color: #ffffff;
+}
+
+.tab-item:hover .tab-status {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+/* Active State */
+.tab-item.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.tab-item.active::before {
+  background-color: #4d7fff;
+}
+
+.tab-item.active .tab-icon {
+  color: #4d7fff;
+}
+
+.tab-item.active .tab-status {
+  background-color: #4d7fff;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(77, 127, 255, 0.4);
+}
+
+/* Completed State */
+.tab-item.completed {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.tab-item.completed .tab-icon {
+  color: #2ecc71;
+}
+
+.tab-item.completed .tab-status {
+  background-color: #2ecc71;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+}
+
+/* Disabled State */
+.tab-item.disabled,
+.tab-item:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tab-item.disabled .tab-icon,
+.tab-item:disabled .tab-icon {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.tab-item.disabled .tab-status,
+.tab-item:disabled .tab-status {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.3);
+}
