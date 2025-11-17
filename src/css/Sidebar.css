@@ -50,6 +50,22 @@ html, body, #root {
   -webkit-mask-size: contain;
 }
 
+/* Better alignment for tick mark */
+.tab-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent !important;
+}
+
+/* Tick sizing */
+.tab-status svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+
 .tab-list {
   list-style: none;
   padding: 0;
@@ -91,6 +107,17 @@ html, body, #root {
   width: 4px;
   background-color: transparent;
   transition: background-color 0.3s ease;
+}
+
+.tab-item.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none; /* ensures click doesn't fire (defensive) */
+}
+
+/* keep keyboard users from accidentally focusing disabled items */
+.tab-item.disabled:focus {
+  outline: none;
 }
 
 .tab-icon {
