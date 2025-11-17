@@ -124,7 +124,7 @@ const EmploymentDetails = () => {
     if (validateAll()) {
       const payload = getOutputJSON();
       localStorage.setItem('employmentDetails', JSON.stringify(payload));
-      navigate('/registration/confirmation');
+      navigate('/registration/scheme');
     }
   };
 

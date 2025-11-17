@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import '../css/InitialDetails.css';
+import { useNavigate } from "react-router-dom";
 
 const InitialDetails = ({ onNext, currentStep = 0, handleBack = () => {} }) => {
-  /* ---------- FORM STATE ---------- */
+   const navigate = useNavigate();
   const [form, setForm] = useState({
     ackId: '',
     pranNumber: '',
@@ -46,10 +47,9 @@ const InitialDetails = ({ onNext, currentStep = 0, handleBack = () => {} }) => {
     validateField(name, value);
   };
 
-  /* ---------- FULL FORM VALIDATION ---------- */
-  const validateAll = () => {
-    // …(same as before)…
-  };
+const validateAll = () => {
+  return Object.keys(errors).length === 0 && requiredFilled;
+};
 
   /* ---------- OUTPUT JSON ---------- */
   const getOutputJSON = () => ({
@@ -94,6 +94,7 @@ const InitialDetails = ({ onNext, currentStep = 0, handleBack = () => {} }) => {
       const payload = getOutputJSON();
       localStorage.setItem('initialDetails', JSON.stringify(payload));
       if (onNext) onNext(payload);
+      navigate("/registration/personal");
     }
   };
 

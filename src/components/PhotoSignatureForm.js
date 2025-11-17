@@ -92,7 +92,7 @@ const PhotoSignatureForm = () => {
   };
 
   const handleBack = () => {
-    navigate('/registration/employment');
+    navigate('/registration/nomination');
   };
 
   return (

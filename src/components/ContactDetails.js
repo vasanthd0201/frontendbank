@@ -137,7 +137,7 @@ const ContactDetails = () => {
     if (validateAll()) {
       const payload = getOutputJSON();
       localStorage.setItem('contactDetails', JSON.stringify(payload));
-      navigate('/registration/nomination');
+      navigate('/registration/fatca');
     }
   };
 

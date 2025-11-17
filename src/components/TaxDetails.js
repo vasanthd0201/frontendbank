@@ -145,12 +145,12 @@ const TaxDetails = () => {
     if (validateAll()) {
       const payload = getOutputJSON();
       localStorage.setItem('fatcaDetails', JSON.stringify(payload));
-      navigate('/registration/scheme');
+      navigate('/registration/bank');
     }
   };
 
   const handleBack = () => {
-    navigate('/registration/nomination');
+    navigate('/registration/contact');
   };
 
   // ---------- RENDER ----------

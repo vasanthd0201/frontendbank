@@ -188,7 +188,7 @@ const BankDetails = () => {
     if (validateAll()) {
       const payload = getOutputJSON();
       localStorage.setItem('bankDetails', JSON.stringify(payload));
-      navigate('/registration/scheme');
+      navigate('/registration/employment');
     }
   };
 

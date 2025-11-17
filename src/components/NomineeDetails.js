@@ -137,7 +137,7 @@ const NomineeDetails = () => {
   const handleNext = () => {
     if (validateAll()) {
       localStorage.setItem('nomineeDetails', JSON.stringify(nominees));
-      navigate('/registration/employment');
+      navigate('/registration/photo-signature');
     }
   };
 

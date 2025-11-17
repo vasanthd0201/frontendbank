@@ -79,12 +79,12 @@ const SchemeSelection = () => {
     if (validateAll()) {
       const payload = getOutputJSON();
       localStorage.setItem('schemeDetails', JSON.stringify(payload));
-      navigate('/registration/employment');
+      navigate('/registration/nomination');
     }
   };
 
   const handleBack = () => {
-    navigate('/registration/bank');
+    navigate('/registration/employment');
   };
 
   // ---------- RENDER ----------
