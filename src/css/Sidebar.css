@@ -29,7 +29,6 @@ html, body, #root {
   font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.05em;
-  padding-bottom: 15px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
@@ -124,17 +123,19 @@ html, body, #root {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  color: rgba(255, 255, 255, 0.7);
-  transition: all 0.3s ease;
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+  font-size: 16px; /* controls icon size */
+  color: rgba(255,255,255,0.75);
+  flex-shrink: 0;
 }
 
-.tab-icon svg {
-  width: 20px;
-  height: 20px;
-  fill: currentColor;
+.tab-item .tab-icon svg {
+  width: 18px;
+  height: 18px;
 }
+
 
 .tab-status {
   display: inline-flex;
