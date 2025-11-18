@@ -1,6 +1,4 @@
-/* ==============================================
-   GLOBAL LAYOUT
-   ============================================== */
+
 .app-container {
   display: flex;
   height: 100vh;
@@ -32,9 +30,7 @@
   margin-left: 10px;
 }
 
-/* ==============================================
-   HEADER
-   ============================================== */
+
 .app-header {
   display: flex;
   flex-direction: column;
@@ -59,9 +55,7 @@
   color: #4e59c6;
 }
 
-/* ==============================================
-   FORM CARD
-   ============================================== */
+
 .form-card {
   background: transparent;
   -webkit-backdrop-filter: none;
@@ -85,9 +79,6 @@
   letter-spacing: 0.04em;
 }
 
-/* ==============================================
-   SINGLE ROW LAYOUT (NEW)
-   ============================================== */
 .form-row {
   display: flex;
   flex-wrap: wrap;
@@ -97,17 +88,16 @@
   width: 100%;
 }
 
-/* Each field: label + input in a row */
+
 .form-field {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 15px;
-  min-width: 380px;
-  flex: 1 1 calc(50% - 15px); /* Adjusted for 2 fields per row */
+  min-width: 300px;
+  flex: 1 1 calc(50% - 15px); 
 }
 
-/* Optional: tighter layout on very wide screens */
 @media (min-width: 1600px) {
   .form-field {
     min-width: 400px;
@@ -115,14 +105,14 @@
   }
 }
 
-/* ==============================================
-   LABEL & INPUT
-   ============================================== */
+
 .form-label {
   font-size: 16px;
   font-weight: 600;
   color: #010205;
   min-width: 180px;
+  margin-top: 10px;
+  margin-bottom: 20px;
   text-align: left;
   white-space: nowrap;
 }
@@ -142,7 +132,7 @@
   background: #FFFFFF4D;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   flex: 1;
-  min-width: 0; /* Allows input to shrink below content */
+  min-width: 0;
 }
 
 .form-input:focus {
@@ -167,9 +157,7 @@ select.form-input {
   background-size: 12px;
 }
 
-/* ==============================================
-   ERROR STATES
-   ============================================== */
+
 .form-field.has-error .form-label {
   color: #d7263d;
 }
@@ -187,9 +175,7 @@ select.form-input {
   grid-column: 1 / -1;
 }
 
-/* ==============================================
-   BUTTONS
-   ============================================== */
+
 .form-inline-button {
   height: 48px;
   border-radius: 8px;
@@ -253,9 +239,7 @@ select.form-input {
   transform: none;
 }
 
-/* ==============================================
-   LEGACY GRID (kept if needed elsewhere)
-   ============================================== */
+
 .form-section {
   display: flex;
   flex-direction: column;
@@ -276,16 +260,14 @@ select.form-input {
   gap: 20px 30px;
 }
 
-/* Optional: for older components using .form-field-container */
+
 .form-field-container {
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
-/* ==============================================
-   RESPONSIVE TWEAKS
-   ============================================== */
+
 @media (max-width: 1200px) {
   .form-field {
     min-width: 340px;
@@ -325,4 +307,96 @@ select.form-input {
   .form-input {
     width: 100%;
   }
+}
+
+
+.upload-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 32px;
+  margin-bottom: 30px;
+}
+
+.upload-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.upload-area {
+  height: 180px;
+  border: 2px dashed #6c7bff;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.25s ease;
+  position: relative;
+}
+
+.upload-area:hover {
+  background: rgba(108, 123, 255, 0.18);
+  border-color: #2a52ff;
+}
+
+/* Upload Button */
+.upload-btn {
+  padding: 12px 22px;
+  font-size: 15px;
+  background: #2a52ff;
+  color: #fff;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.upload-btn:hover {
+  background: #1a3cdf;
+}
+
+/* Preview Image */
+.preview-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  object-fit: contain;
+  background: #ffffff;
+  padding: 6px;
+}
+
+/* Remove Button */
+.remove-file-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  height: 26px;
+  width: 26px;
+  border-radius: 50%;
+  font-size: 12px;
+  background: #e63946;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.remove-file-btn:hover {
+  background: #b71d2a;
+}
+
+/* File Note */
+.file-note {
+  font-size: 13px;
+  color: #555;
+  margin-top: -4px;
+}
+
+/* Error styling */
+.upload-field.has-error .upload-area {
+  border-color: #d7263d;
+  background: rgba(215, 38, 61, 0.08);
 }
