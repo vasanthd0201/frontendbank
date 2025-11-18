@@ -21,7 +21,6 @@
   flex-direction: column;
   gap: 32px;
   align-items: center;
-  overflow-y: auto;
   min-height: 100vh;
   height: 100%;
   background-image: url('/public/image4.png');
@@ -63,18 +62,18 @@
    FORM CARD
    ============================================== */
 .form-card {
-  background: transparent;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.95);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-radius: 24px;
-  padding: 15px 15px;
-  box-shadow: none;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 32px;
   width: 100%;
   max-width: 1250px;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .form-card h2 {
@@ -83,6 +82,7 @@
   font-size: 26px;
   color: #040509;
   letter-spacing: 0.04em;
+  font-weight: 600;
 }
 
 /* ==============================================
@@ -100,11 +100,18 @@
 /* Each field: label + input in a row */
 .form-field {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 15px;
+  flex-direction: column;
+  gap: 8px;
   min-width: 380px;
   flex: 1 1 calc(50% - 15px); /* Adjusted for 2 fields per row */
+}
+
+/* Input container to group input and error message */
+.input-container {
+  display: flex;
+  flex-direction: column;
+  width: 65%;
+  height: 48px;
 }
 
 /* Optional: tighter layout on very wide screens */
@@ -125,6 +132,8 @@
   min-width: 180px;
   text-align: left;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
 }
 
 .required {
@@ -139,10 +148,10 @@
   padding: 0 14px;
   font-size: 15px;
   color: #0f1a63;
-  background: #FFFFFF4D;
+  background: #FFFFFF;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  flex: 1;
-  min-width: 0; /* Allows input to shrink below content */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-input:focus {
@@ -182,9 +191,10 @@ select.form-input {
 .error-text {
   font-size: 13px;
   color: #d7263d;
-  width: 100%;
   margin-top: 5px;
-  grid-column: 1 / -1;
+  width: 100%;
+  display: block;
+  text-align: left;
 }
 
 /* ==============================================
