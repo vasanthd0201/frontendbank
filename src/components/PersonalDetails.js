@@ -11,7 +11,7 @@ const PersonalDetails = () => {
     firstName: '',
     middleName: '',
     lastName: '',
-    dateOfBirth: '',
+    dateOfBirth: '', // Store in YYYY-MM-DD format for date picker
     gender: '',
     orphan: '',
     placeOfBirth: '',
@@ -105,13 +105,9 @@ const PersonalDetails = () => {
       }
       if (name === 'dateOfBirth') {
         if (!value) newErr[name] = 'Date of Birth is required';
-        else if (!/^\d{8}$/.test(value)) newErr[name] = 'Date must be in MMDDYYYY format';
         else {
           // Check if it's a valid date and not future date
-          const month = parseInt(value.substring(0, 2));
-          const day = parseInt(value.substring(2, 4));
-          const year = parseInt(value.substring(4, 8));
-          const dob = new Date(year, month - 1, day);
+          const dob = new Date(value);
           const today = new Date();
           
           if (isNaN(dob.getTime())) newErr[name] = 'Invalid date';
@@ -250,6 +246,16 @@ const PersonalDetails = () => {
     validateField(name, value);
   };
 
+  // Function to format date from YYYY-MM-DD to MMDDYYYY for API
+  const formatDateForAPI = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}${day}${year}`;
+  };
+
   // ---------- FULL FORM VALIDATION ----------
   const validateAll = () => {
     const mandatory = [
@@ -297,7 +303,7 @@ const PersonalDetails = () => {
     subMdlName: form.middleName,
     subLastName: form.lastName,
     gender: form.gender,
-    subDob: form.dateOfBirth,
+    subDob: formatDateForAPI(form.dateOfBirth), // Format date for API
     placeOfBirth: form.placeOfBirth,
     countryOfBirth: form.countryOfBirth,
     maritalStatus: form.maritalStatus,
@@ -422,14 +428,11 @@ const PersonalDetails = () => {
                 Date of Birth <span className="required">*</span>
               </span>
               <input
-                type="text"
+                type="date"
                 className="form-input"
-                placeholder="MMDDYYYY"
-                value={form.dateOfBirth}
-                onChange={(e) => {
-                  const v = e.target.value.replace(/\D/g, '').slice(0, 8);
-                  handleChange('dateOfBirth', v);
-                }}
+                value={form.dateOfBirth} // Directly use the stored value
+                onChange={(e) => handleChange('dateOfBirth', e.target.value)} // Store as YYYY-MM-DD
+                max={new Date().toISOString().split('T')[0]} // Set max date to today
               />
               {errors.dateOfBirth && <span className="error-text">{errors.dateOfBirth}</span>}
             </label>
@@ -916,16 +919,7 @@ const PersonalDetails = () => {
                 <option value="139">Certificate of Identity having photo signed by a Registrar</option>
                 <option value="140">Certificate of Identity having photo signed by a Statutory Authority</option>
                 <option value="141">Certificate of Identity having photo signed by a Central/State Govt.</option>
-                <option value="142">Certificate of Identity having photo signed by a PSU</option>
-                <option value="143">Certificate of Identity having photo signed by a Gazetted Officer</option>
-                <option value="144">Certificate of Identity having photo signed by a Municipal Councilor</option>
-                <option value="145">Certificate of Identity having photo signed by a MP</option>
-                <option value="146">Certificate of Identity having photo signed by a MLA</option>
-                <option value="147">Certificate of Identity having photo signed by a Bank Manager</option>
-                <option value="148">Certificate of Identity having photo signed by a Post Master</option>
-                <option value="149">Certificate of Identity having photo signed by a Registrar</option>
-                <option value="150">Certificate of Identity having photo signed by a Statutory Authority</option>
-                <option value="151">Certificate of the POP Bank for an existing bank customer</option>
+                <option value="142">Certificate of the POP Bank for an existing bank customer</option>
                 <option value="152">Certificate of Identity having photo signed by a Central/State Govt.</option>
                 <option value="153">Certificate of Identity having photo signed by a PSU</option>
                 <option value="154">Certificate of Identity having photo signed by a Gazetted Officer</option>

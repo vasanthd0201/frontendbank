@@ -1,0 +1,22 @@
+[
+  { "code": "101", "name": "Passport" },
+  { "code": "102", "name": "Voter ID" },
+  { "code": "103", "name": "Driving License" },
+  { "code": "107", "name": "Aadhaar Card" },
+  { "code": "108", "name": "Ration Card" },
+  { "code": "109", "name": "Electricity Bill" },
+  { "code": "110", "name": "Water Bill" },
+  { "code": "111", "name": "Telephone Bill (Landline)" },
+  { "code": "112", "name": "Gas Connection Bill" },
+  { "code": "113", "name": "Bank Passbook / Statement" },
+  { "code": "114", "name": "Post Office Passbook" },
+  { "code": "115", "name": "Property/House Tax Receipt" },
+  { "code": "116", "name": "Employer Certificate" },
+  { "code": "117", "name": "Domicile Certificate" },
+  { "code": "118", "name": "Municipal Tax Receipt" },
+  { "code": "121", "name": "Registered Rent Agreement" },
+  { "code": "122", "name": "Registered Lease Document" },
+  { "code": "124", "name": "Government Address Certificate" },
+  { "code": "161", "name": "OCI Address Proof (OCI only)" },
+  { "code": "333", "name": "Others (Manual Document)" }
+]
