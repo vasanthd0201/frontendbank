@@ -23,27 +23,42 @@ const EmploymentDetails = () => {
 
   const [errors, setErrors] = useState({});
 
+  // Convert yyyy-mm-dd → ddmmyyyy
+  const formatToDDMMYYYY = (value) => {
+    if (!value) return '';
+    const [yyyy, mm, dd] = value.split('-');
+    return dd + mm + yyyy;
+  };
+
   // ---------- VALIDATION ----------
   const validateField = useCallback(
     (name, value) => {
       const newErr = { ...errors };
       delete newErr[name];
 
+      // Occupation mandatory + 2 digits
       if (name === 'occupation') {
         if (!value) newErr[name] = 'Occupation is required';
-        else if (value.length > 2) newErr[name] = 'Max 2 characters';
+        else if (!/^\d{2}$/.test(value)) newErr[name] = 'Must be 2 digits';
+      }
+
+      // Other Occupation Details mandatory only when occupation = 06
+      if (name === 'otherOccDetails') {
+        if (form.occupation === '06' && !value) {
+          newErr[name] = 'Required when Occupation is 06';
+        } else if (value.length > 45) {
+          newErr[name] = 'Max 45 characters';
+        }
+      }
+
+      // Income Range — do not allow "00"
+      if (name === 'incomeRange') {
+        if (value === '00') newErr[name] = '00 is not a valid income range';
+        else if (value.length > 10) newErr[name] = 'Max 10 characters';
       }
 
       if (name === 'relativePoliticalExposed' && value && !['Y', 'N'].includes(value)) {
         newErr[name] = 'Must be Y or N';
-      }
-
-      if (name === 'otherOccDetails' && value.length > 45) {
-        newErr[name] = 'Max 45 characters';
-      }
-
-      if (name === 'incomeRange' && value.length > 10) {
-        newErr[name] = 'Max 10 characters';
       }
 
       if (name === 'politicallyExposed' && value.length > 2) {
@@ -54,12 +69,9 @@ const EmploymentDetails = () => {
         newErr[name] = 'Max 16 characters';
       }
 
-      if (name === 'dateOfRetirement' && value && !/^\d{8}$/.test(value)) {
-        newErr[name] = 'Must be DDMMYYYY (8 digits)';
-      }
-
-      if (name === 'dateOfJoining' && value && !/^\d{8}$/.test(value)) {
-        newErr[name] = 'Must be DDMMYYYY (8 digits)';
+      // Date fields must be 8 digits (DDMMYYYY)
+      if ((name === 'dateOfJoining' || name === 'dateOfRetirement') && value) {
+        if (!/^\d{8}$/.test(value)) newErr[name] = 'Must be DDMMYYYY (8 digits)';
       }
 
       if (name === 'empDepartment' && value.length > 40) {
@@ -80,7 +92,7 @@ const EmploymentDetails = () => {
 
       setErrors(newErr);
     },
-    [errors]
+    [errors, form.occupation]
   );
 
   const handleChange = (name, value) => {
@@ -88,57 +100,96 @@ const EmploymentDetails = () => {
     validateField(name, value);
   };
 
-  // ---------- FULL FORM VALIDATION ----------
-  const validateAll = () => {
-    const mandatory = ['occupation'];
-    const newErr = {};
+const validateAll = () => {
+  const newErr = {};
 
-    mandatory.forEach((f) => {
-      if (!form[f]) newErr[f] = 'Required';
-    });
+  // Occupation (mandatory + 2 digits)
+  if (!form.occupation) newErr.occupation = "Required";
+  else if (!/^\d{2}$/.test(form.occupation))
+    newErr.occupation = "Must be 2 digits";
 
-    Object.keys(form).forEach(field => validateField(field, form[field]));
+  // Other Occupation Details (mandatory only if occupation = 06)
+  if (form.occupation === "06" && !form.otherOccDetails)
+    newErr.otherOccDetails = "Required when Occupation is 06";
+  else if (form.otherOccDetails && form.otherOccDetails.length > 45)
+    newErr.otherOccDetails = "Max 45 characters";
 
-    setErrors(newErr);
-    return Object.keys(newErr).length === 0;
-  };
+  // Income Range
+  if (form.incomeRange === "00")
+    newErr.incomeRange = "00 is not a valid income range";
+  else if (form.incomeRange && form.incomeRange.length > 10)
+    newErr.incomeRange = "Max 10 characters";
 
-  // ---------- OUTPUT JSON ----------
-  const getOutputJSON = () => ({
-    occupation: form.occupation,
-    relativePoliticalExposed: form.relativePoliticalExposed,
-    otherOccDetails: form.otherOccDetails,
-    incomeRange: form.incomeRange,
-    politicallyExposed: form.politicallyExposed,
-    empId: form.empId,
-    dateOfRetirement: form.dateOfRetirement,
-    dateOfJoining: form.dateOfJoining,
-    empDepartment: form.empDepartment,
-    empMinistry: form.empMinistry,
-    ddoOffice: form.ddoOffice,
-    ppan: form.ppan
-  });
+  // Date Validation (must be 8 digits)
+  if (form.dateOfJoining && !/^\d{8}$/.test(form.dateOfJoining))
+    newErr.dateOfJoining = "Must be DDMMYYYY (8 digits)";
 
-  // ---------- BUTTON HANDLERS ----------
+  if (form.dateOfRetirement && !/^\d{8}$/.test(form.dateOfRetirement))
+    newErr.dateOfRetirement = "Must be DDMMYYYY (8 digits)";
+
+  // Politically Exposed Fields
+  if (form.relativePoliticalExposed && !["Y", "N"].includes(form.relativePoliticalExposed))
+    newErr.relativePoliticalExposed = "Must be Y or N";
+
+  if (form.politicallyExposed && form.politicallyExposed.length > 2)
+    newErr.politicallyExposed = "Max 2 characters";
+
+  // Employee ID
+  if (form.empId && form.empId.length > 16)
+    newErr.empId = "Max 16 characters";
+
+  // Department
+  if (form.empDepartment && form.empDepartment.length > 40)
+    newErr.empDepartment = "Max 40 characters";
+
+  // Ministry
+  if (form.empMinistry && form.empMinistry.length > 80)
+    newErr.empMinistry = "Max 80 characters";
+
+  // DDO Office
+  if (form.ddoOffice && form.ddoOffice.length > 75)
+    newErr.ddoOffice = "Max 75 characters";
+
+  // PPAN
+  if (form.ppan && form.ppan.length > 16)
+    newErr.ppan = "Max 16 characters";
+
+  setErrors(newErr);
+
+  return Object.keys(newErr).length === 0;
+};
+
+
   const handleNext = () => {
     if (validateAll()) {
-      const payload = getOutputJSON();
-      localStorage.setItem('employmentDetails', JSON.stringify(payload));
+      localStorage.setItem('employmentDetails', JSON.stringify(form));
       navigate('/registration/scheme');
     }
   };
 
-  const handleBack = () => {
-    navigate('/registration/bank');
-  };
+  const handleBack = () => navigate('/registration/bank');
+  const handleKeyDown = (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
 
-  // ---------- RENDER ----------
+    const form = e.target.closest(".form-grid");
+    const inputs = Array.from(
+      form.querySelectorAll("input, select, textarea")
+    );
+
+    const index = inputs.indexOf(e.target);
+    const next = inputs[index + 1];
+
+    if (next) next.focus();
+    else handleNext();
+  }
+};
+
   return (
     <div className="app-main">
-      <section className="form-card">
+      <section className="form-card" onKeyDown={handleKeyDown}>
         <h2>Registration – Employment Details</h2>
 
-        {/* Employment Information */}
         <div className="form-section">
           <h3>Employment Information</h3>
           <div className="form-grid">
@@ -153,14 +204,30 @@ const EmploymentDetails = () => {
                 className="form-input"
                 value={form.occupation}
                 onChange={(e) => handleChange('occupation', e.target.value)}
-                placeholder="e.g. 01"
+                placeholder="e.g. 06"
                 maxLength={2}
               />
               {errors.occupation && <span className="error-text">{errors.occupation}</span>}
             </label>
 
-            {/* Relative Political Exposed */}
-            <label className={`form-field${errors.relativePoliticalExposed ? ' has-error' : ''}`}>
+            {/* Other Occupation Details */}
+            <label className={`form-field${errors.otherOccDetails ? ' has-error' : ''}`}>
+              <span className="form-label">
+                Other Occupation Details
+                {form.occupation === '06' && <span className="required"> *</span>}
+              </span>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="e.g. Private Tutor"
+                value={form.otherOccDetails}
+                onChange={(e) => handleChange('otherOccDetails', e.target.value)}
+              />
+              {errors.otherOccDetails && <span className="error-text">{errors.otherOccDetails}</span>}
+            </label>
+
+            {/* Relative Politically Exposed */}
+            <label className="form-field">
               <span className="form-label">Relative Politically Exposed</span>
               <select
                 className="form-input"
@@ -168,23 +235,35 @@ const EmploymentDetails = () => {
                 onChange={(e) => handleChange('relativePoliticalExposed', e.target.value)}
               >
                 <option value="" disabled>Select</option>
-                <option value="Y">Yes</option>
-                <option value="N">No</option>
+                <option value="Y">Y</option>
+                <option value="N">N</option>
               </select>
-              {errors.relativePoliticalExposed && <span className="error-text">{errors.relativePoliticalExposed}</span>}
             </label>
 
-            {/* Other Occupation Details */}
-            <label className={`form-field${errors.otherOccDetails ? ' has-error' : ''}`}>
-              <span className="form-label">Other Occupation Details</span>
+            {/* Date of Joining */}
+            <label className={`form-field${errors.dateOfJoining ? ' has-error' : ''}`}>
+              <span className="form-label">Date of Joining</span>
               <input
-                type="text"
+                type="date"
                 className="form-input"
-                value={form.otherOccDetails}
-                onChange={(e) => handleChange('otherOccDetails', e.target.value)}
-                placeholder="e.g. Freelancer"
+                onChange={(e) =>
+                  handleChange('dateOfJoining', formatToDDMMYYYY(e.target.value))
+                }
               />
-              {errors.otherOccDetails && <span className="error-text">{errors.otherOccDetails}</span>}
+              {errors.dateOfJoining && <span className="error-text">{errors.dateOfJoining}</span>}
+            </label>
+
+            {/* Date of Retirement */}
+            <label className={`form-field${errors.dateOfRetirement ? ' has-error' : ''}`}>
+              <span className="form-label">Date of Retirement</span>
+              <input
+                type="date"
+                className="form-input"
+                onChange={(e) =>
+                  handleChange('dateOfRetirement', formatToDDMMYYYY(e.target.value))
+                }
+              />
+              {errors.dateOfRetirement && <span className="error-text">{errors.dateOfRetirement}</span>}
             </label>
 
             {/* Income Range */}
@@ -193,9 +272,9 @@ const EmploymentDetails = () => {
               <input
                 type="text"
                 className="form-input"
+                placeholder="e.g. 05 (for 5 lakhs)"
                 value={form.incomeRange}
                 onChange={(e) => handleChange('incomeRange', e.target.value)}
-                placeholder="e.g. 5L-10L"
               />
               {errors.incomeRange && <span className="error-text">{errors.incomeRange}</span>}
             </label>
@@ -206,12 +285,11 @@ const EmploymentDetails = () => {
               <input
                 type="text"
                 className="form-input"
-                value={form.politicallyExposed}
-                onChange={(e) => handleChange('politicallyExposed', e.target.value)}
                 placeholder="e.g. YN"
                 maxLength={2}
+                value={form.politicallyExposed}
+                onChange={(e) => handleChange('politicallyExposed', e.target.value)}
               />
-              {errors.politicallyExposed && <span className="error-text">{errors.politicallyExposed}</span>}
             </label>
 
             {/* Employee ID */}
@@ -220,71 +298,34 @@ const EmploymentDetails = () => {
               <input
                 type="text"
                 className="form-input"
+                placeholder="e.g. EMP12345"
                 value={form.empId}
                 onChange={(e) => handleChange('empId', e.target.value)}
-                placeholder="e.g. EMP12345"
               />
-              {errors.empId && <span className="error-text">{errors.empId}</span>}
             </label>
 
-            {/* Date of Retirement */}
-            <label className={`form-field${errors.dateOfRetirement ? ' has-error' : ''}`}>
-              <span className="form-label">Date of Retirement</span>
-              <input
-                type="text"
-                className="form-input"
-                value={form.dateOfRetirement}
-                onChange={(e) => {
-                  const v = e.target.value.replace(/\D/g, '').slice(0, 8);
-                  handleChange('dateOfRetirement', v);
-                }}
-                placeholder="DDMMYYYY"
-                maxLength={8}
-              />
-              {errors.dateOfRetirement && <span className="error-text">{errors.dateOfRetirement}</span>}
-            </label>
-
-            {/* Date of Joining */}
-            <label className={`form-field${errors.dateOfJoining ? ' has-error' : ''}`}>
-              <span className="form-label">Date of Joining</span>
-              <input
-                type="text"
-                className="form-input"
-                value={form.dateOfJoining}
-                onChange={(e) => {
-                  const v = e.target.value.replace(/\D/g, '').slice(0, 8);
-                  handleChange('dateOfJoining', v);
-                }}
-                placeholder="DDMMYYYY"
-                maxLength={8}
-              />
-              {errors.dateOfJoining && <span className="error-text">{errors.dateOfJoining}</span>}
-            </label>
-
-            {/* Employee Department */}
+            {/* Department */}
             <label className={`form-field${errors.empDepartment ? ' has-error' : ''}`}>
               <span className="form-label">Employee Department</span>
               <input
                 type="text"
                 className="form-input"
+                placeholder="e.g. IT Department"
                 value={form.empDepartment}
                 onChange={(e) => handleChange('empDepartment', e.target.value)}
-                placeholder="e.g. IT"
               />
-              {errors.empDepartment && <span className="error-text">{errors.empDepartment}</span>}
             </label>
 
-            {/* Employee Ministry */}
+            {/* Ministry */}
             <label className={`form-field${errors.empMinistry ? ' has-error' : ''}`}>
               <span className="form-label">Employee Ministry</span>
               <input
                 type="text"
                 className="form-input"
+                placeholder="e.g. Ministry of Finance"
                 value={form.empMinistry}
                 onChange={(e) => handleChange('empMinistry', e.target.value)}
-                placeholder="e.g. Ministry of Finance"
               />
-              {errors.empMinistry && <span className="error-text">{errors.empMinistry}</span>}
             </label>
 
             {/* DDO Office */}
@@ -293,11 +334,10 @@ const EmploymentDetails = () => {
               <input
                 type="text"
                 className="form-input"
+                placeholder="e.g. DDO Mumbai"
                 value={form.ddoOffice}
                 onChange={(e) => handleChange('ddoOffice', e.target.value)}
-                placeholder="e.g. DDO Mumbai"
               />
-              {errors.ddoOffice && <span className="error-text">{errors.ddoOffice}</span>}
             </label>
 
             {/* PPAN */}
@@ -306,26 +346,24 @@ const EmploymentDetails = () => {
               <input
                 type="text"
                 className="form-input"
+                placeholder="e.g. PPAN123456"
                 value={form.ppan}
                 onChange={(e) => handleChange('ppan', e.target.value)}
-                placeholder="e.g. PPAN123456"
               />
-              {errors.ppan && <span className="error-text">{errors.ppan}</span>}
             </label>
 
           </div>
         </div>
 
-        {/* Form Actions */}
         <div className="form-actions">
           <button type="button" className="action-button secondary" onClick={handleBack}>
             Back
           </button>
+
           <button
             type="button"
-            className={`action-button${Object.keys(errors).length > 0 || !form.occupation ? ' disabled' : ' primary'}`}
+            className="action-button primary"
             onClick={handleNext}
-            disabled={Object.keys(errors).length > 0 || !form.occupation}
           >
             Next
           </button>

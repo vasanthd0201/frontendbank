@@ -18,13 +18,13 @@ const PhotoSignatureForm = () => {
   const signatureInputRef = useRef(null);
   const form60InputRef = useRef(null);
 
-  // File validation (4–12 KB, JPEG only)
+  
   const validateFile = (file, field) => {
-    if (!file) return true; // optional for form60
+    if (!file) return true; 
 
     const isJpeg = file.type === 'image/jpeg';
     const sizeInKB = file.size / 1024;
-    const isSizeValid = sizeInKB >= 4 && sizeInKB <= 12;
+    const isSizeValid = sizeInKB >= 4 && sizeInKB <= 24;
 
     if (!isJpeg || !isSizeValid) {
       setErrors(prev => ({
@@ -87,13 +87,14 @@ const PhotoSignatureForm = () => {
       };
       localStorage.setItem('uploadDetails', JSON.stringify(payload));
       alert('Application Submitted Successfully!');
-      // navigate('/success'); // optional
+
     }
   };
 
   const handleBack = () => {
     navigate('/registration/nomination');
   };
+  
 
   return (
     <div className="app-main">

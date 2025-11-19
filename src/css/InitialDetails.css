@@ -111,7 +111,7 @@
   display: flex;
   flex-direction: column;
   width: 65%;
-  height: 48px;
+  min-height: 48px;
 }
 
 /* Optional: tighter layout on very wide screens */
@@ -195,6 +195,9 @@ select.form-input {
   width: 100%;
   display: block;
   text-align: left;
+  position: absolute; /* Added this */
+  top: 100%; /* Added this */
+  left: 0; /* Added this */
 }
 
 /* ==============================================

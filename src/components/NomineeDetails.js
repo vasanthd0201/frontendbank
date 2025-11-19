@@ -145,12 +145,29 @@ const NomineeDetails = () => {
     navigate('/registration/scheme');
   };
 
+   const handleKeyDown = (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+
+    const form = e.target.closest(".form-grid");
+    const inputs = Array.from(
+      form.querySelectorAll("input, select, textarea")
+    );
+
+    const index = inputs.indexOf(e.target);
+    const next = inputs[index + 1];
+
+    if (next) next.focus();
+    else handleNext();
+  }
+};
+
   return (
     <div className="app-main">
       <section className="form-card">
         <h2>Registration – Nominee Details</h2>
 
-        <div className="nominees-container">
+        <div className="nominees-container" onKeyDown={handleKeyDown}>
           {nominees.map((nominee, index) => {
             const isMinor = nominee.majorMinorFlag === 'M';
             const isOther = nominee.relationship === 'Other';
@@ -286,7 +303,7 @@ const NomineeDetails = () => {
                   </label>
 
                   <label className={`form-field${errors[`${index}_percentageShare`] ? ' has-error' : ''}`}>
-                    <span className="form-label">Share % <span className="required">*</span></span>
+                    <span className="form-label"> Share % <span className="required">*</span></span>
                     <div className="input-with-clear">
                       <input
                         type="text"

@@ -1,328 +1,154 @@
-/* ==============================================
-   GLOBAL LAYOUT
-   ============================================== */
-.app-container {
-  display: flex;
-  height: 100vh;
+.nominee-card {
+  background: #ffffffcc;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  margin-bottom: 28px;
+  border: 1px solid #e0e4ff;
 }
 
-.main-content {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
-}
-
-.app-main {
-  flex: 1;
-  padding: 15px 15px;
-  background: #f6f7ff;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  align-items: center;
-  overflow-y: auto;
-  min-height: 100vh;
-  height: 100%;
-  background-image: url('/public/image4.png');
-  background-size: 100% 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: scroll;
-  margin-left: 10px;
-}
-
-/* ==============================================
-   HEADER
-   ============================================== */
-.app-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  text-align: center;
-}
-
-.app-header h1 {
-  margin: 0;
-  font-size: 32px;
-  font-weight: 700;
-  color: #1a2be2;
-}
-
-.app-header p {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #4e59c6;
-}
-
-/* ==============================================
-   FORM CARD
-   ============================================== */
-.form-card {
-  background: transparent;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  border-radius: 24px;
-  padding: 15px 15px;
-  box-shadow: none;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  width: 100%;
-  max-width: 1250px;
-  border: none;
-}
-
-.form-card h2 {
-  margin: 0;
-  text-align: center;
-  font-size: 26px;
-  color: #040509;
-  letter-spacing: 0.04em;
-}
-
-/* ==============================================
-   SINGLE ROW LAYOUT (NEW)
-   ============================================== */
-.form-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px 30px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  width: 100%;
-}
-
-/* Each field: label + input in a row */
-.form-field {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 15px;
-  min-width: 380px;
-  flex: 1 1 calc(50% - 15px); /* Adjusted for 2 fields per row */
-}
-
-/* Optional: tighter layout on very wide screens */
-@media (min-width: 1600px) {
-  .form-field {
-    min-width: 400px;
-    flex: 1 1 calc(50% - 15px);
-  }
-}
-
-/* ==============================================
-   LABEL & INPUT
-   ============================================== */
-.form-label {
-  font-size: 16px;
-  font-weight: 600;
-  color: #010205;
-  min-width: 180px;
-  text-align: left;
-  white-space: nowrap;
-}
-
-.required {
-  color: #ff6a00;
-  margin-left: 4px;
-}
-
-.form-input {
-  height: 48px;
-  border: 2px solid #06070e;
-  border-radius: 8px;
-  padding: 0 14px;
-  font-size: 15px;
-  color: #0f1a63;
-  background: #FFFFFF4D;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  flex: 1;
-  min-width: 0; /* Allows input to shrink below content */
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: #0f1a63;
-  box-shadow: 0 0 0 4px rgba(42, 82, 255, 0.2);
-}
-
-.form-input::placeholder {
-  color: #7c89d9;
-}
-
-/* Select dropdown arrow */
-select.form-input {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 48px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%230f1a63' d='M1.41 0L6 4.58 10.59 0 12 1.41 6 7.41 0 1.41z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 16px center;
-  background-size: 12px;
-}
-
-/* ==============================================
-   ERROR STATES
-   ============================================== */
-.form-field.has-error .form-label {
-  color: #d7263d;
-}
-
-.form-field.has-error .form-input {
-  border-color: #d7263d;
-  box-shadow: 0 0 0 4px rgba(215, 38, 61, 0.15);
-}
-
-.error-text {
-  font-size: 13px;
-  color: #d7263d;
-  width: 100%;
-  margin-top: 5px;
-  grid-column: 1 / -1;
-}
-
-/* ==============================================
-   BUTTONS
-   ============================================== */
-.form-inline-button {
-  height: 48px;
-  border-radius: 8px;
-  border: none;
-  padding: 0 24px;
-  font-size: 15px;
-  font-weight: 700;
-  background: #2a52ff;
-  color: #ffffff;
-  box-shadow: 0 10px 24px rgba(42, 82, 255, 0.3);
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.form-inline-button:hover {
-  transform: translateY(-1px);
-}
-
-.form-actions {
+.nominee-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
-.action-button {
-  min-width: 130px;
-  height: 48px;
-  border-radius: 10px;
-  font-size: 16px;
+.nominee-header h3 {
+  margin: 0;
+  font-size: 20px;
   font-weight: 700;
-  cursor: pointer;
+  color: #0d1b4c;
+}
+
+
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px 32px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+
+.guardian-section .form-row {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0; /* critical: allows field to shrink inside grid */
+}
+
+.form-label {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #0d0d0d;
+}
+
+.form-input {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border: 1.8px solid #3340a0;
+  border-radius: 10px;
+  background: #fdfdff;
+  font-size: 15px;
+  transition: 0.2s ease-in-out;
+}
+
+.form-input:focus {
+  border-color: #1a2be2;
+  box-shadow: 0 0 0 3px rgba(42, 82, 255, 0.2);
+  outline: none;
+}
+
+/* Error */
+.form-field.has-error .form-input {
+  border-color: #e62929 !important;
+  box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.12);
+}
+
+.error-text {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #e62929;
+}
+
+
+.input-with-clear {
+  display: flex;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-with-clear .form-input {
+  padding-right: 44px; /* space for clear button */
+}
+
+.clear-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #ff3b3b;
+  color: white;
   border: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 2;
+  flex-shrink: 0;
 }
 
-.action-button.primary {
+.add-nominee-btn {
   background: #2a52ff;
-  color: #ffffff;
-  box-shadow: 0 16px 30px rgba(42, 82, 255, 0.35);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  margin-top: 12px;
+  box-shadow: 0 6px 16px rgba(42, 82, 255, 0.3);
 }
 
-.action-button.secondary {
-  background: #ffffff;
-  color: #2a52ff;
-  border: 2px solid #2a52ff;
-}
-
-.action-button:hover:not(:disabled) {
-  transform: translateY(-1px);
-}
-
-.action-button:active {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-.action-button:disabled {
+.add-nominee-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
 }
 
-/* ==============================================
-   LEGACY GRID (kept if needed elsewhere)
-   ============================================== */
-.form-section {
+
+.form-actions {
+  margin-top: 25px;
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
 }
 
-.form-section h3 {
-  margin: 0;
-  text-align: center;
-  font-size: 20px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 20px 30px;
-}
-
-/* Optional: for older components using .form-field-container */
-.form-field-container {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-/* ==============================================
-   RESPONSIVE TWEAKS
-   ============================================== */
-@media (max-width: 1200px) {
-  .form-field {
-    min-width: 340px;
-    flex: 1 1 calc(50% - 15px);
-  }
-  .form-label {
-    min-width: 160px;
-  }
-}
 
 @media (max-width: 992px) {
-  .form-field {
-    min-width: 300px;
-    flex: 1 1 calc(50% - 15px);
-  }
-  .form-label {
-    min-width: 140px;
-    font-size: 15px;
+  .form-row {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .form-row {
-    gap: 16px;
-  }
-  .form-field {
-    flex-direction: column;
-    align-items: stretch;
-    min-width: 100%;
-    flex: 1 1 100%;
-  }
-  .form-label {
-    min-width: auto;
-    text-align: left;
-    margin-bottom: 6px;
-  }
-  .form-input {
-    width: 100%;
+    grid-template-columns: 1fr;
   }
 }
