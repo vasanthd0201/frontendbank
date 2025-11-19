@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/SchemeSelection.css";
 
 const SchemeSelection = () => {
+  const formRef = useRef(null);
   const navigate = useNavigate();
 
   // ---------- FORM STATE ----------
-  const [schemeOption, setSchemeOption] = useState(""); // 'auto' or 'active'
+  const [schemeOption, setSchemeOption] = useState(""); 
   const [lifeCycleFund, setLifeCycleFund] = useState("");
   const [funds, setFunds] = useState([
     { type: "Equity", percentage: "" },
@@ -139,22 +140,27 @@ const SchemeSelection = () => {
   if (e.key === "Enter") {
     e.preventDefault();
 
-    const form = e.target.closest(".form-grid");
+    if (!formRef.current) return;
+
     const inputs = Array.from(
-      form.querySelectorAll("input, select, textarea")
-    );
+      formRef.current.querySelectorAll("input, select, textarea")
+    ).filter((el) => !el.readOnly && !el.disabled);
 
     const index = inputs.indexOf(e.target);
-    const next = inputs[index + 1];
 
-    if (next) next.focus();
-    else handleNext();
+    if (index >= 0 && index < inputs.length - 1) {
+      inputs[index + 1].focus();
+    } else {
+      handleNext();
+    }
   }
 };
 
+
   // ---------- RENDER ----------
   return (
-    <div className="app-main" onKeyDown={handleKeyDown}>
+    <div className="app-main" ref={formRef} onKeyDown={handleKeyDown}>
+
       <section className="form-card">
         <h2>Registration – Scheme Selection</h2>
 

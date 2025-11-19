@@ -346,6 +346,20 @@ const TaxDetails = () => {
   );
   const disableNext = hasErrors || !form.declarationOfFatca || missingRequiredFatcaListFields;
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const form = e.target.closest(".form-grid");
+      const inputs = Array.from(
+        form.querySelectorAll("input, select, textarea")
+      );
+      const index = inputs.indexOf(e.target);
+      const next = inputs[index + 1];
+      if (next) next.focus();
+      else handleNext();
+    }
+  };
+
   // ---------- RENDER ----------
   return (
     <div className="app-main">
@@ -355,7 +369,7 @@ const TaxDetails = () => {
         {/* FATCA Information */}
         <div className="form-section">
           <h3>FATCA Information</h3>
-          <div className="form-grid">
+          <div className="form-grid" onKeyDown={handleKeyDown}>
             {/* Declaration of FATCA */}
             <label className={`form-field${errors.declarationOfFatca ? ' has-error' : ''}`}>
               <span className="form-label">
@@ -441,7 +455,7 @@ const TaxDetails = () => {
           {errors.fatcaList && <div className="error-text">{errors.fatcaList}</div>}
           {form.fatcaList.map((item, idx) => (
             <div key={idx} className="fatca-item card">
-              <div className="form-grid">
+              <div className="form-grid" onKeyDown={handleKeyDown}>
                 <label className={`form-field${errors[`fatcaList[${idx}].countryOfTaxRes`] ? ' has-error' : ''}`}>
                   <span className="form-label">Country of Tax Residence <span className="required">*</span></span>
                   <input

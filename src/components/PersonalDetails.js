@@ -1,11 +1,20 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import '../css/PersonalDetails.css';
 
 const PersonalDetails = () => {
   const navigate = useNavigate();
+  // Convert Date object to MMDDYYYY string
+  const dateToMMDDYYYY = (date) => {
+    if (!date) return '';
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = String(date.getFullYear());
+    return `${month}${day}${year}`;
+  };
 
-  // ---------- FORM STATE ----------
   const [form, setForm] = useState({
     title: '',
     firstName: '',
@@ -83,8 +92,7 @@ const PersonalDetails = () => {
     (name, value) => {
       const newErr = { ...errors };
       delete newErr[name];
-
-      // Personal Information
+      
       if (name === 'title' && !value) newErr[name] = 'Title is required';
       if (name === 'firstName') {
         if (!value) newErr[name] = 'First Name is required';
@@ -103,21 +111,39 @@ const PersonalDetails = () => {
           newErr[name] = 'Second character onwards can only contain alphabets, spaces and special characters ()~!@#$%-/\\,.&*()_+-={}[|?;:]';
         }
       }
-      if (name === 'dateOfBirth') {
-        if (!value) newErr[name] = 'Date of Birth is required';
-        else {
-          // Check if it's a valid date and not future date
-          const dob = new Date(value);
-          const today = new Date();
-          
-          if (isNaN(dob.getTime())) newErr[name] = 'Invalid date';
-          else if (dob > today) newErr[name] = 'Date of Birth cannot be a future date';
-          else {
-            const age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));
-            if (age < 18) newErr[name] = 'Subscriber age should be greater than or equal to 18 years';
-          }
+if (name === 'dateOfBirth') {
+  if (!value) {
+    newErr[name] = 'Date of Birth is required';
+  } else if (value.length !== 8) {
+    newErr[name] = 'Invalid date format';
+  } else {
+    // Parse MMDDYYYY format
+    const month = parseInt(value.substring(0, 2), 10);
+    const day = parseInt(value.substring(2, 4), 10);
+    const year = parseInt(value.substring(4, 8), 10);
+    
+    // Validate components
+    if (isNaN(month) || isNaN(day) || isNaN(year) || 
+        month < 1 || month > 12 || day < 1 || day > 31 || year < 1900) {
+      newErr[name] = 'Invalid date';
+    } else {
+      // Create valid Date object (month is 0-indexed)
+      const dob = new Date(year, month - 1, day);
+      const today = new Date();
+      
+      if (isNaN(dob.getTime())) {
+        newErr[name] = 'Invalid date';
+      } else if (dob > today) {
+        newErr[name] = 'Date of Birth cannot be a future date';
+      } else {
+        const age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));
+        if (age < 18) {
+          newErr[name] = 'Subscriber age should be greater than or equal to 18 years';
         }
       }
+    }
+  }
+}
       if (name === 'gender' && !value) newErr[name] = 'Gender is required';
       if (name === 'orphan' && !value) newErr[name] = 'Orphan status is required';
       if (name === 'placeOfBirth') {
@@ -246,7 +272,6 @@ const PersonalDetails = () => {
     validateField(name, value);
   };
 
-  // Function to format date from YYYY-MM-DD to MMDDYYYY for API
   const formatDateForAPI = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -256,7 +281,6 @@ const PersonalDetails = () => {
     return `${month}${day}${year}`;
   };
 
-  // ---------- FULL FORM VALIDATION ----------
   const validateAll = () => {
     const mandatory = [
       'title', 'firstName', 'lastName', 'dateOfBirth', 'gender', 'orphan',
@@ -296,7 +320,6 @@ const PersonalDetails = () => {
     return Object.keys(newErr).length === 0;
   };
 
-  // ---------- OUTPUT JSON ----------
   const getOutputJSON = () => ({
     subTitle: form.title,
     subFstName: form.firstName,
@@ -365,7 +388,6 @@ const PersonalDetails = () => {
     existingCustomerFlag: form.existingCustomerFlag
   });
 
-  // ---------- BUTTON HANDLERS ----------
   const handleNext = () => {
     if (validateAll()) {
       const payload = getOutputJSON();
@@ -378,6 +400,36 @@ const PersonalDetails = () => {
     navigate('/registration/initial');
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const form = e.target.closest(".form-grid");
+      const inputs = Array.from(
+        form.querySelectorAll("input, select, textarea")
+      );
+      const index = inputs.indexOf(e.target);
+      const next = inputs[index + 1];
+      if (next) next.focus();
+      else handleNext();
+    }
+  };
+
+  // Handle date picker key down
+  const handleDateKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      // Move to next field after date picker
+      const form = e.target.closest(".form-grid");
+      const inputs = Array.from(
+        form.querySelectorAll("input, select, textarea")
+      );
+      const index = inputs.indexOf(e.target);
+      const next = inputs[index + 1];
+      if (next) next.focus();
+      else handleNext();
+    }
+  };
+
   // ---------- RENDER ----------
   return (
     <div className="app-main">
@@ -387,7 +439,7 @@ const PersonalDetails = () => {
         {/* Personal Information */}
         <div className="form-section">
           <h3>Personal Information</h3>
-          <div className="form-grid">
+          <div className="form-grid" onKeyDown={handleKeyDown}>
             <label className={`form-field${errors.title ? ' has-error' : ''}`}>
               <span className="form-label">
                 Title <span className="required">*</span>
@@ -427,12 +479,24 @@ const PersonalDetails = () => {
               <span className="form-label">
                 Date of Birth <span className="required">*</span>
               </span>
-              <input
-                type="date"
-                className="form-input"
-                value={form.dateOfBirth} // Directly use the stored value
-                onChange={(e) => handleChange('dateOfBirth', e.target.value)} // Store as YYYY-MM-DD
-                max={new Date().toISOString().split('T')[0]} // Set max date to today
+              <DatePicker
+                selected={form.dateOfBirth ? new Date(
+                  form.dateOfBirth.substring(4, 8), 
+                  form.dateOfBirth.substring(0, 2) - 1, 
+                  form.dateOfBirth.substring(2, 4)
+                ) : null}
+                onChange={(date) => {
+                  const formattedDate = date ? dateToMMDDYYYY(date) : '';
+                  handleChange('dateOfBirth', formattedDate);
+                }}
+                dateFormat="dd/MM/yyyy"
+                placeholderText="dd/mm/yyyy"
+                className="form-input dob-picker"
+                onKeyDown={handleDateKeyDown}
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+                maxDate={new Date()}
               />
               {errors.dateOfBirth && <span className="error-text">{errors.dateOfBirth}</span>}
             </label>
@@ -789,7 +853,7 @@ const PersonalDetails = () => {
         {/* Family Details */}
         <div className="form-section">
           <h3>Family Details</h3>
-          <div className="form-grid">
+          <div className="form-grid" onKeyDown={handleKeyDown}>
             <label className={`form-field${errors.fatherFirstName ? ' has-error' : ''}`}>
               <span className="form-label">Father's First Name</span>
               <input type="text" className="form-input" value={form.fatherFirstName} onChange={(e) => handleChange('fatherFirstName', e.target.value)} />
@@ -873,7 +937,7 @@ const PersonalDetails = () => {
         {/* Documents */}
         <div className="form-section">
           <h3>Documents</h3>
-          <div className="form-grid">
+          <div className="form-grid" onKeyDown={handleKeyDown}>
             <label className={`form-field${errors.idProof ? ' has-error' : ''}`}>
               <span className="form-label">ID Proof</span>
               <select className="form-input" value={form.idProof} onChange={(e) => handleChange('idProof', e.target.value)}>
@@ -1142,7 +1206,7 @@ const PersonalDetails = () => {
         {/* KYC & PAN */}
         <div className="form-section">
           <h3>KYC & PAN Verification</h3>
-          <div className="form-grid">
+          <div className="form-grid" onKeyDown={handleKeyDown}>
             <label className={`form-field${errors.kycVerificationFlag ? ' has-error' : ''}`}>
               <span className="form-label">
                 KYC Verification Flag <span className="required">*</span>
@@ -1202,15 +1266,24 @@ const PersonalDetails = () => {
 
             <label className={`form-field${errors.idProofExpiryDate ? ' has-error' : ''}`}>
               <span className="form-label">ID Proof Expiry Date</span>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="MMDDYYYY"
-                value={form.idProofExpiryDate}
-                onChange={(e) => {
-                  const v = e.target.value.replace(/\D/g, '').slice(0, 8);
-                  handleChange('idProofExpiryDate', v);
+              <DatePicker
+                selected={form.dateOfBirth ? new Date(
+                  form.dateOfBirth.substring(4, 8), 
+                  form.dateOfBirth.substring(0, 2) - 1, 
+                  form.dateOfBirth.substring(2, 4)
+                ) : null}
+                onChange={(date) => {
+                  const formattedDate = date ? dateToMMDDYYYY(date) : '';
+                  handleChange('dateOfBirth', formattedDate);
                 }}
+                dateFormat="dd/MM/yyyy"
+                placeholderText="dd/mm/yyyy"
+                className="form-input dob-picker"
+                onKeyDown={handleDateKeyDown}
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+                maxDate={new Date()}
               />
               {errors.idProofExpiryDate && <span className="error-text">{errors.idProofExpiryDate}</span>}
             </label>
@@ -1237,7 +1310,7 @@ const PersonalDetails = () => {
         {/* Declaration References */}
         <div className="form-section">
           <h3>Declaration References</h3>
-          <div className="form-grid">
+          <div className="form-grid" onKeyDown={handleKeyDown}>
             <label className={`form-field${errors.cboRegNo ? ' has-error' : ''}`}>
               <span className="form-label">CBO Reg No</span>
               <input type="text" className="form-input" value={form.cboRegNo} onChange={(e) => handleChange('cboRegNo', e.target.value)} />

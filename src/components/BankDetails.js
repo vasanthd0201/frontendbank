@@ -5,7 +5,6 @@ import '../css/BankDetails.css';
 const BankDetails = () => {
   const navigate = useNavigate();
 
-  // ---------- FORM STATE ----------
   const [form, setForm] = useState({
     sameAsTier1: '',
     // Tier 1
@@ -215,6 +214,19 @@ const BankDetails = () => {
     navigate('/registration/fatca');
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const form = e.target.closest(".form-grid");
+      const inputs = Array.from(
+        form.querySelectorAll("input, select, textarea")
+      );
+      const index = inputs.indexOf(e.target);
+      const next = inputs[index + 1];
+      if (next) next.focus();
+      else handleNext();
+    }
+  };
   // ---------- RENDER ----------
   return (
     <div className="app-main">
@@ -224,9 +236,9 @@ const BankDetails = () => {
         {/* Bank Options */}
         <div className="form-section">
           <h3>Bank Options</h3>
-          <div className="form-grid">
+          <div className="form-grid" onKeyDown={handleKeyDown}>
             <label className={`form-field${errors.sameAsTier1 ? ' has-error' : ''}`}>
-              <div className="form-field-content">
+              <div className="form-field-content" >
                 <span className="form-label">Same as Tier 1</span>
                 <select
                   className="form-input"
@@ -246,7 +258,7 @@ const BankDetails = () => {
         {/* Tier 1 Bank Details */}
         <div className="form-section">
           <h3>Tier 1 Bank Details</h3>
-          <div className="form-grid">
+          <div className="form-grid" onKeyDown={handleKeyDown}>
 
             <label className={`form-field${errors.tier1_accountType ? ' has-error' : ''}`}>
               <div className="form-field-content">
@@ -408,7 +420,7 @@ const BankDetails = () => {
         {/* Tier 2 Bank Details */}
         <div className="form-section">
           <h3>Tier 2 Bank Details {form.sameAsTier1 === 'Y' && <span className="info-text">(Same as Tier 1)</span>}</h3>
-          <div className="form-grid">
+          <div className="form-grid" onKeyDown={handleKeyDown}>
 
            {[
   { key: 'tier2_accountType', label: 'Account Type' },

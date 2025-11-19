@@ -12,7 +12,21 @@
   flex: 1;
   overflow: hidden;
 }
-
+/* Keep date input same width + height */
+.react-datepicker-wrapper,
+.react-datepicker__input-container input {
+  width: 100% !important;
+  height: 48px !important;
+  padding: 0 14px !important;
+  /* border: 2px solid #06070e !important; */
+  border-radius: 8px !important;
+  background: #FFFFFF4D !important;
+  font-size: 15px !important;
+}
+.react-datepicker__current-month {
+  font-size: 14px !important;      /* Default is 16–18px */
+  font-weight: 600 !important;
+}
 .app-main {
   flex: 1;
   padding: 15px 15px;

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/NomineeDetailsForm.css';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 const calculateAge = (dob) => {
   if (!dob) return null;
@@ -145,11 +148,31 @@ const NomineeDetails = () => {
     navigate('/registration/scheme');
   };
 
-   const handleKeyDown = (e) => {
+const handleKeyDown = (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
 
-    const form = e.target.closest(".form-grid");
+    const form = document.querySelector(".nominees-container");
+    if (!form) return;
+
+    const inputs = Array.from(
+      form.querySelectorAll("input, select, textarea")
+    );
+
+    const index = inputs.indexOf(e.target);
+    const next = inputs[index + 1];
+
+    if (next) next.focus();
+    else handleNext();
+  }
+};
+const handleDateKeyDown = (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+
+    const form = document.querySelector(".nominees-container");
+    if (!form) return;
+
     const inputs = Array.from(
       form.querySelectorAll("input, select, textarea")
     );
@@ -167,7 +190,7 @@ const NomineeDetails = () => {
       <section className="form-card">
         <h2>Registration – Nominee Details</h2>
 
-        <div className="nominees-container" onKeyDown={handleKeyDown}>
+        <div className="nominees-container" >
           {nominees.map((nominee, index) => {
             const isMinor = nominee.majorMinorFlag === 'M';
             const isOther = nominee.relationship === 'Other';
@@ -188,7 +211,7 @@ const NomineeDetails = () => {
                 </div>
 
                 {/* Name Row */}
-                <div className="form-row">
+                <div className="form-row" onKeyDown={handleKeyDown}>
                   <label className={`form-field${errors[`${index}_firstName`] ? ' has-error' : ''}`}>
                     <span className="form-label">First Name <span className="required">*</span></span>
                     <input
@@ -248,13 +271,22 @@ const NomineeDetails = () => {
 
                   <label className={`form-field${errors[`${index}_dateOfBirth`] ? ' has-error' : ''}`}>
                     <span className="form-label">Date of Birth <span className="required">*</span></span>
-                    <input
-                      type="date"
-                      className="form-input"
-                      value={nominee.dateOfBirth}
-                      onChange={(e) => handleChange(index, e)}
-                      name="dateOfBirth"
-                    />
+<DatePicker
+  selected={nominee.dateOfBirth ? new Date(nominee.dateOfBirth) : null}
+  onChange={(date) =>
+    handleChange(index, {
+      target: { name: "dateOfBirth", value: date ? date.toISOString().split("T")[0] : "" }
+    })
+  }
+  dateFormat="yyyy-MM-dd"
+  placeholderText="dd/mm/yyyy" 
+  className="form-input dob-picker"
+  onKeyDown={handleDateKeyDown}
+  showMonthDropdown
+  showYearDropdown
+  dropdownMode="select"
+  maxDate={new Date("2025-11-30")}
+/>
                     {errors[`${index}_dateOfBirth`] && <span className="error-text">{errors[`${index}_dateOfBirth`]}</span>}
                   </label>
 

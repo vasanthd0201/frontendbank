@@ -20,7 +20,7 @@ const PhotoSignatureForm = () => {
 
   
   const validateFile = (file, field) => {
-    if (!file) return true; 
+    if (!file) return true;
 
     const isJpeg = file.type === 'image/jpeg';
     const sizeInKB = file.size / 1024;
@@ -94,19 +94,35 @@ const PhotoSignatureForm = () => {
   const handleBack = () => {
     navigate('/registration/nomination');
   };
-  
+  const handleKeyDown = (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+
+    const form = e.target.closest("form");
+    const inputs = Array.from(
+      form.querySelectorAll(
+        "input:not([type='hidden']), select, textarea, button"
+      )
+    );
+
+    const index = inputs.indexOf(e.target);
+    const next = inputs[index + 1];
+
+    if (next) {
+      next.focus();
+    }
+  }
+};
+
 
   return (
     <div className="app-main">
       <section className="form-card">
         <h2>Registration – Upload Photo & Signature</h2>
 
-        <form onSubmit={handleSubmit} className="upload-form">
+        <form onSubmit={handleSubmit} className="upload-form" onKeyDown={handleKeyDown}>
 
-          {/* Upload Section */}
           <div className="upload-grid">
-
-            {/* Photograph */}
             <div className={`upload-field${errors.photo ? ' has-error' : ''}`}>
               <label className="form-label">
                 Upload Photograph <span className="required">*</span>
